@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayside.npa.archive.dao.ArchiveMapper" >
+  <resultMap id="BaseResultMap" type="com.bayside.npa.archive.model.Archive" >
+    <id column="archiveid" property="archiveid" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="part" property="part" jdbcType="VARCHAR" />
+    <result column="parturl" property="parturl" jdbcType="VARCHAR" />
+    <result column="partname" property="partname" jdbcType="VARCHAR" />
+    
+    <result column="projectname" property="projectname" jdbcType="VARCHAR" />
+    <result column="projectmanager" property="projectmanager" jdbcType="VARCHAR" />
+    <result column="filenumber" property="filenumber" jdbcType="VARCHAR" />
+    <result column="projectgrade" property="projectgrade" jdbcType="VARCHAR" />
+    <result column="borrower" property="borrower" jdbcType="VARCHAR" />
+    <result column="cityoforigin" property="cityoforigin" jdbcType="VARCHAR" />
+    <result column="subocounty" property="subocounty" jdbcType="VARCHAR" />
+    <result column="borbalance" property="borbalance" jdbcType="DECIMAL" />
+    <result column="borrowingdate" property="borrowingdate" jdbcType="TIMESTAMP" />
+    <result column="connumber" property="connumber" jdbcType="VARCHAR" />
+    <result column="guaranteemode" property="guaranteemode" jdbcType="VARCHAR" />
+    <result column="bail" property="bail" jdbcType="VARCHAR" />
+    <result column="amountguaranteed" property="amountguaranteed" jdbcType="DECIMAL" />
+    <result column="litsituation" property="litsituation" jdbcType="VARCHAR" />
+    <result column="courtname" property="courtname" jdbcType="VARCHAR" />
+    <result column="caseno" property="caseno" jdbcType="VARCHAR" />
+    <result column="judge" property="judge" jdbcType="VARCHAR" />
+    <result column="borsituation" property="borsituation" jdbcType="VARCHAR" />
+    <result column="guastatus" property="guastatus" jdbcType="VARCHAR" />
+    <result column="morsituation" property="morsituation" jdbcType="VARCHAR" />
+    <result column="invandclues" property="invandclues" jdbcType="VARCHAR" />
+    <result column="treideas" property="treideas" jdbcType="VARCHAR" />
+    <result column="prodebriefing" property="prodebriefing" jdbcType="VARCHAR" />
+    <result column="keytips" property="keytips" jdbcType="VARCHAR" />
+    <result column="transfertrip" property="transfertrip" jdbcType="VARCHAR" />
+    <result column="rolloutdate" property="rolloutdate" jdbcType="TIMESTAMP" />
+    <result column="pritransfer" property="pritransfer" jdbcType="DECIMAL" />
+    <result column="outinterest" property="outinterest" jdbcType="DECIMAL" />
+    <result column="aging" property="aging" jdbcType="VARCHAR" />
+    <result column="collectiondate" property="collectiondate" jdbcType="TIMESTAMP" />
+    <result column="collectionmethod" property="collectionmethod" jdbcType="VARCHAR" />
+    <result column="datereceivable" property="datereceivable" jdbcType="TIMESTAMP" />
+    <result column="firmsid" property="firmsid" jdbcType="INTEGER"/>
+    <result column="firmname" property="firmname" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    archiveid, id, part, parturl, partname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" /> from npa_archive
+    where archiveid = #{archiveid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.bayside.npa.archive.model.Archive" >
+  
+  	SELECT * FROM npa_projectform p, npa_archive a, npa_firms f,npa_usermanager u
+    WHERE a.id=p.id
+	AND p.firmsid=f.firmsid
+	AND f.id=u.id
+	AND a.part=#{part,jdbcType=VARCHAR}
+	AND f.firmsid=#{firmsid,jdbcType=INTEGER}
+	AND f.id=#{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from npa_archive
+    where archiveid = #{archiveid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.npa.archive.model.Archive" >
+    insert into npa_archive (archiveid, id, part, 
+      parturl, partname)
+    values (#{archiveid,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{part,jdbcType=VARCHAR}, 
+      #{parturl,jdbcType=VARCHAR}, #{partname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.npa.archive.model.Archive" >
+    insert into npa_archive
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="archiveid != null" >
+        archiveid,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="part != null" >
+        part,
+      </if>
+      <if test="parturl != null" >
+        parturl,
+      </if>
+      <if test="partname != null" >
+        partname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="archiveid != null" >
+        #{archiveid,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="part != null" >
+        #{part,jdbcType=VARCHAR},
+      </if>
+      <if test="parturl != null" >
+        #{parturl,jdbcType=VARCHAR},
+      </if>
+      <if test="partname != null" >
+        #{partname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

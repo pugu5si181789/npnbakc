@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayside.npa.file1.dao.File1Mapper" >
+  <resultMap id="BaseResultMap" type="com.bayside.npa.file1.model.File1" >
+    <id column="archiveid" property="archiveid" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="part" property="part" jdbcType="VARCHAR" />
+    <result column="parturl" property="parturl" jdbcType="VARCHAR" />
+    <result column="partname" property="partname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    archiveid, id, part, parturl, partname
+  </sql>
+  <select id="selectFileById" resultMap="BaseResultMap" parameterType="com.bayside.npa.file1.model.File1" >
+    select * from npa_archive where id = #{0,jdbcType=VARCHAR} AND part = #{1,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delFileById" parameterType="java.lang.String" >
+    delete from npa_archive
+    where archiveid = #{archiveid,jdbcType=VARCHAR}
+  </delete>
+  
+  <select id="selectFileByArchiveid" resultMap="BaseResultMap" parameterType="com.bayside.npa.file1.model.File1" >
+    select * from npa_archive where archiveid = #{archiveid,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateFileByArchiveid" parameterType="com.bayside.npa.file1.model.File1" >
+    update npa_archive
+    <set >
+      <if test="1 != null" >
+        id = #{1,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where archiveid = #{0,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectFileByArchiveidNew" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select * from npa_archive where archiveid
+    in
+ 	<foreach collection="listds" index="index" item="item" open="(" separator="," close=")">
+         #{item}       
+    </foreach>
+  </select>
+  
+  <update id="updateFileByArchiveidNew" parameterType="java.util.Map" >
+    update npa_archive
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where archiveid in
+    <foreach collection="listds" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </update>
+</mapper>

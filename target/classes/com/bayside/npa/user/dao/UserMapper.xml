@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayside.npa.user.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.bayside.npa.user.model.User" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="logintime" property="logintime" jdbcType="TIMESTAMP" />
+    <result column="logouttime" property="logouttime" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="usertype" property="usertype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, username, password, logintime, logouttime, address, usertype
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from npa_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  	<select id="loginSelective" resultMap="BaseResultMap" parameterType="com.bayside.npa.user.model.User">
+			select
+			<include refid="Base_Column_List" />
+			from npa_user where 1=1
+				<if test="id !=null">
+					and ID = #{id,jdbcType=VARCHAR}
+				</if>
+				<if test="username != null">
+					and username = #{username,jdbcType=VARCHAR}
+				</if>
+				<if test="password != null">
+					and password = #{password,jdbcType=VARCHAR}
+				</if>
+				<if test="logintime != null">
+					and logintime = #{logintime,jdbcType=VARCHAR}
+				</if>
+				<if test="logouttime != null">
+					and logouttime = #{logouttime,jdbcType=VARCHAR}
+				</if>
+				<if test="address != null">
+					and address = #{address,jdbcType=VARCHAR}
+				</if>
+				<if test="usertype != null">
+					and usertype = #{usertype,jdbcType=VARCHAR}
+				</if>
+	</select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from npa_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.npa.user.model.User" >
+    insert into npa_user (ID, username, password, 
+      logintime, logouttime, address, 
+      usertype)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{logintime,jdbcType=TIMESTAMP}, #{logouttime,jdbcType=TIMESTAMP}, #{address,jdbcType=VARCHAR}, 
+      #{usertype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.npa.user.model.User" >
+    insert into npa_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="logintime != null" >
+        logintime,
+      </if>
+      <if test="logouttime != null" >
+        logouttime,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="usertype != null" >
+        usertype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logouttime != null" >
+        #{logouttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="usertype != null" >
+        #{usertype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayside.npa.user.model.User" >
+    update npa_user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        logintime = #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logouttime != null" >
+        logouttime = #{logouttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="usertype != null" >
+        usertype = #{usertype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayside.npa.user.model.User" >
+    update npa_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      logintime = #{logintime,jdbcType=TIMESTAMP},
+      logouttime = #{logouttime,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      usertype = #{usertype,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

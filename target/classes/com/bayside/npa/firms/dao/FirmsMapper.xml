@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayside.npa.firms.dao.FirmsMapper" >
+  <resultMap id="BaseResultMap" type="com.bayside.npa.firms.model.Firms" >
+    <id column="firmsid" property="firmsid" jdbcType="INTEGER" />
+    <result column="firmname" property="firmname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    firmsid, firmname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from npa_firms
+    where firmsid = #{firmsid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="showFirms" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from npa_firms
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from npa_firms
+    where firmsid = #{firmsid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.npa.firms.model.Firms" >
+    insert into npa_firms (firmsid, firmname)
+    values (#{firmsid,jdbcType=INTEGER}, #{firmname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.npa.firms.model.Firms" >
+    insert into npa_firms
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="firmsid != null" >
+        firmsid,
+      </if>
+      <if test="firmname != null" >
+        firmname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="firmsid != null" >
+        #{firmsid,jdbcType=INTEGER},
+      </if>
+      <if test="firmname != null" >
+        #{firmname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayside.npa.firms.model.Firms" >
+    update npa_firms
+    <set >
+      <if test="firmname != null" >
+        firmname = #{firmname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where firmsid = #{firmsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayside.npa.firms.model.Firms" >
+    update npa_firms
+    set firmname = #{firmname,jdbcType=VARCHAR}
+    where firmsid = #{firmsid,jdbcType=INTEGER}
+  </update>
+</mapper>

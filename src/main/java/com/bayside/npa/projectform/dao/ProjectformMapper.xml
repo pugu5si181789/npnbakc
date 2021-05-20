@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bayside.npa.projectform.dao.ProjectformMapper" >
+  <resultMap id="BaseResultMap" type="com.bayside.npa.projectform.model.Projectform" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="projectname" property="projectname" jdbcType="VARCHAR" />
+    <result column="projectmanager" property="projectmanager" jdbcType="VARCHAR" />
+    <result column="filenumber" property="filenumber" jdbcType="VARCHAR" />
+    <result column="projectgrade" property="projectgrade" jdbcType="VARCHAR" />
+    <result column="borrower" property="borrower" jdbcType="VARCHAR" />
+    <result column="cityoforigin" property="cityoforigin" jdbcType="VARCHAR" />
+    <result column="subocounty" property="subocounty" jdbcType="VARCHAR" />
+    <result column="borbalance" property="borbalance" jdbcType="DECIMAL" />
+    <result column="borrowingdate" property="borrowingdate" jdbcType="TIMESTAMP" />
+    <result column="connumber" property="connumber" jdbcType="VARCHAR" />
+    <result column="guaranteemode" property="guaranteemode" jdbcType="VARCHAR" />
+    <result column="bail" property="bail" jdbcType="VARCHAR" />
+    <result column="amountguaranteed" property="amountguaranteed" jdbcType="DECIMAL" />
+    <result column="litsituation" property="litsituation" jdbcType="VARCHAR" />
+    <result column="courtname" property="courtname" jdbcType="VARCHAR" />
+    <result column="caseno" property="caseno" jdbcType="VARCHAR" />
+    <result column="judge" property="judge" jdbcType="VARCHAR" />
+    <result column="borsituation" property="borsituation" jdbcType="VARCHAR" />
+    <result column="guastatus" property="guastatus" jdbcType="VARCHAR" />
+    <result column="morsituation" property="morsituation" jdbcType="VARCHAR" />
+    <result column="invandclues" property="invandclues" jdbcType="VARCHAR" />
+    <result column="treideas" property="treideas" jdbcType="VARCHAR" />
+    <result column="prodebriefing" property="prodebriefing" jdbcType="VARCHAR" />
+    <result column="keytips" property="keytips" jdbcType="VARCHAR" />
+    <result column="transfertrip" property="transfertrip" jdbcType="VARCHAR" />
+    <result column="rolloutdate" property="rolloutdate" jdbcType="TIMESTAMP" />
+    <result column="pritransfer" property="pritransfer" jdbcType="DECIMAL" />
+    <result column="outinterest" property="outinterest" jdbcType="DECIMAL" />
+    <result column="aging" property="aging" jdbcType="VARCHAR" />
+    <result column="collectiondate" property="collectiondate" jdbcType="TIMESTAMP" />
+    <result column="collectionmethod" property="collectionmethod" jdbcType="VARCHAR" />
+    <result column="datereceivable" property="datereceivable" jdbcType="TIMESTAMP" />
+    <result column="firmsid" property="firmsid" jdbcType="INTEGER"/>
+    <result column="firmname" property="firmname" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, projectname, projectmanager, filenumber, projectgrade, borrower, cityoforigin, 
+    subocounty, borbalance, borrowingdate, connumber, guaranteemode, bail, amountguaranteed, 
+    litsituation, courtname, caseno, judge, borsituation, guastatus, morsituation, invandclues, 
+    treideas, prodebriefing, keytips, transfertrip, rolloutdate, pritransfer, outinterest, 
+    aging, collectiondate, collectionmethod, datereceivable,firmsid,firmname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from npa_projectform
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+ <!--用于展示在itemList页面  起点-->
+  <select id="selectByPrimaryKeyPF" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT p.borrower,p.bail,p.filenumber,p.borbalance,p.firmsid,p.id FROM npa_projectform p, npa_firms f 
+    WHERE p.firmsid = f.firmsid
+    AND f.firmsid = #{id,jdbcType=INTEGER}
+  </select>
+ <!--    结束 -->
+ 
+  <!--用于展示在projectForm页面  起点-->
+  <select id="selectByIdPF" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT * FROM npa_projectform p, npa_firms f 
+    WHERE p.firmsid = f.firmsid
+    AND p.id = #{id,jdbcType=INTEGER}
+  </select>
+ <!--    结束 -->
+ 
+ <!--查询  起点-->
+  <select id="selectPF" resultMap="BaseResultMap" parameterType="com.bayside.npa.projectform.model.Projectform" >
+    SELECT * FROM npa_projectform p, npa_firms f 
+    WHERE p.firmsid = f.firmsid
+    AND 1=1
+    <trim prefix="AND" prefixOverrides="AND |OR |LIKE"> 
+	    <if test="firmsid !=null and firmsid > 0 and firmsid != ''" >
+	    	f.firmsid = #{firmsid,jdbcType=INTEGER}
+	    </if>
+	    <if test="borrower !=null and borrower != ''"><!-- 债务人 -->
+	    	AND p.borrower = #{borrower,jdbcType=VARCHAR}
+	    </if>
+	    <if test="courtname !=null and courtname != ''"><!-- 法院名称 -->
+	    	AND P.courtname = #{courtname,jdbcType=VARCHAR}
+	    </if>
+	    <if test="cityoforigin !=null and cityoforigin != ''"><!-- 所属市 -->
+	    	AND p.cityoforigin = #{cityoforigin,jdbcType=VARCHAR}
+	    </if>
+	    <if test="subocounty !=null and subocounty != ''"><!-- 所属县 -->
+	    	AND p.subocounty = #{subocounty,jdbcType=VARCHAR}
+	    </if>
+	    <if test="projectgrade !=null and projectgrade != ''"><!-- 级别 -->
+	    	AND p.projectgrade = #{projectgrade,jdbcType=VARCHAR}
+	    </if>
+	    <if test="litsituation !=null and litsituation != ''"><!-- 诉讼情况 -->
+	    	AND p.litsituation = #{litsituation, jdbcType=VARCHAR}
+	    </if>
+	    <if test="bail !=null and bail != ''"><!-- 担保人 -->
+	    	AND p.bail = #{bail, jdbcType=VARCHAR}
+	    </if>
+	     <if test="borbalance !=null">
+	    	ORDER BY p.borbalance
+	    </if> <if test="borbalance == null and borbalance != ''">
+	    	ORDER BY p.borbalance DESC
+	    </if>
+	    	
+	    	
+	 	 
+    </trim>
+    
+  </select>
+ <!-- 结束 -->
+ 
+ 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from npa_projectform
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bayside.npa.projectform.model.Projectform" >
+    insert into npa_projectform (id, projectname, projectmanager, 
+      filenumber, projectgrade, borrower, 
+      cityoforigin, subocounty, borbalance, 
+      borrowingdate, connumber, guaranteemode, 
+      bail, amountguaranteed, litsituation, 
+      courtname, caseno, judge, 
+      borsituation, guastatus, morsituation, 
+      invandclues, treideas, prodebriefing, 
+      keytips, transfertrip, rolloutdate, 
+      pritransfer, outinterest, aging, 
+      collectiondate, collectionmethod, datereceivable
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectname,jdbcType=VARCHAR}, #{projectmanager,jdbcType=VARCHAR}, 
+      #{filenumber,jdbcType=VARCHAR}, #{projectgrade,jdbcType=VARCHAR}, #{borrower,jdbcType=VARCHAR}, 
+      #{cityoforigin,jdbcType=VARCHAR}, #{subocounty,jdbcType=VARCHAR}, #{borbalance,jdbcType=DECIMAL}, 
+      #{borrowingdate,jdbcType=TIMESTAMP}, #{connumber,jdbcType=VARCHAR}, #{guaranteemode,jdbcType=VARCHAR}, 
+      #{bail,jdbcType=VARCHAR}, #{amountguaranteed,jdbcType=DECIMAL}, #{litsituation,jdbcType=VARCHAR}, 
+      #{courtname,jdbcType=VARCHAR}, #{caseno,jdbcType=VARCHAR}, #{judge,jdbcType=VARCHAR}, 
+      #{borsituation,jdbcType=VARCHAR}, #{guastatus,jdbcType=VARCHAR}, #{morsituation,jdbcType=VARCHAR}, 
+      #{invandclues,jdbcType=VARCHAR}, #{treideas,jdbcType=VARCHAR}, #{prodebriefing,jdbcType=VARCHAR}, 
+      #{keytips,jdbcType=VARCHAR}, #{transfertrip,jdbcType=VARCHAR}, #{rolloutdate,jdbcType=TIMESTAMP}, 
+      #{pritransfer,jdbcType=DECIMAL}, #{outinterest,jdbcType=DECIMAL}, #{aging,jdbcType=VARCHAR}, 
+      #{collectiondate,jdbcType=TIMESTAMP}, #{collectionmethod,jdbcType=VARCHAR}, #{datereceivable,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bayside.npa.projectform.model.Projectform" >
+    insert into npa_projectform
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectname != null" >
+        projectname,
+      </if>
+      <if test="projectmanager != null" >
+        projectmanager,
+      </if>
+      <if test="filenumber != null" >
+        filenumber,
+      </if>
+      <if test="projectgrade != null" >
+        projectgrade,
+      </if>
+      <if test="borrower != null" >
+        borrower,
+      </if>
+      <if test="cityoforigin != null" >
+        cityoforigin,
+      </if>
+      <if test="subocounty != null" >
+        subocounty,
+      </if>
+      <if test="borbalance != null" >
+        borbalance,
+      </if>
+      <if test="borrowingdate != null" >
+        borrowingdate,
+      </if>
+      <if test="connumber != null" >
+        connumber,
+      </if>
+      <if test="guaranteemode != null" >
+        guaranteemode,
+      </if>
+      <if test="bail != null" >
+        bail,
+      </if>
+      <if test="amountguaranteed != null" >
+        amountguaranteed,
+      </if>
+      <if test="litsituation != null" >
+        litsituation,
+      </if>
+      <if test="courtname != null" >
+        courtname,
+      </if>
+      <if test="caseno != null" >
+        caseno,
+      </if>
+      <if test="judge != null" >
+        judge,
+      </if>
+      <if test="borsituation != null" >
+        borsituation,
+      </if>
+      <if test="guastatus != null" >
+        guastatus,
+      </if>
+      <if test="morsituation != null" >
+        morsituation,
+      </if>
+      <if test="invandclues != null" >
+        invandclues,
+      </if>
+      <if test="treideas != null" >
+        treideas,
+      </if>
+      <if test="prodebriefing != null" >
+        prodebriefing,
+      </if>
+      <if test="keytips != null" >
+        keytips,
+      </if>
+      <if test="transfertrip != null" >
+        transfertrip,
+      </if>
+      <if test="rolloutdate != null" >
+        rolloutdate,
+      </if>
+      <if test="pritransfer != null" >
+        pritransfer,
+      </if>
+      <if test="outinterest != null" >
+        outinterest,
+      </if>
+      <if test="aging != null" >
+        aging,
+      </if>
+      <if test="collectiondate != null" >
+        collectiondate,
+      </if>
+      <if test="collectionmethod != null" >
+        collectionmethod,
+      </if>
+      <if test="datereceivable != null" >
+        datereceivable,
+      </if>
+      <if test="firmsid != null" >
+        firmsid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectname != null" >
+        #{projectname,jdbcType=VARCHAR},
+      </if>
+      <if test="projectmanager != null" >
+        #{projectmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="filenumber != null" >
+        #{filenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="projectgrade != null" >
+        #{projectgrade,jdbcType=VARCHAR},
+      </if>
+      <if test="borrower != null" >
+        #{borrower,jdbcType=VARCHAR},
+      </if>
+      <if test="cityoforigin != null" >
+        #{cityoforigin,jdbcType=VARCHAR},
+      </if>
+      <if test="subocounty != null" >
+        #{subocounty,jdbcType=VARCHAR},
+      </if>
+      <if test="borbalance != null" >
+        #{borbalance,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowingdate != null" >
+        #{borrowingdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="connumber != null" >
+        #{connumber,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteemode != null" >
+        #{guaranteemode,jdbcType=VARCHAR},
+      </if>
+      <if test="bail != null" >
+        #{bail,jdbcType=VARCHAR},
+      </if>
+      <if test="amountguaranteed != null" >
+        #{amountguaranteed,jdbcType=DECIMAL},
+      </if>
+      <if test="litsituation != null" >
+        #{litsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="courtname != null" >
+        #{courtname,jdbcType=VARCHAR},
+      </if>
+      <if test="caseno != null" >
+        #{caseno,jdbcType=VARCHAR},
+      </if>
+      <if test="judge != null" >
+        #{judge,jdbcType=VARCHAR},
+      </if>
+      <if test="borsituation != null" >
+        #{borsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="guastatus != null" >
+        #{guastatus,jdbcType=VARCHAR},
+      </if>
+      <if test="morsituation != null" >
+        #{morsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="invandclues != null" >
+        #{invandclues,jdbcType=VARCHAR},
+      </if>
+      <if test="treideas != null" >
+        #{treideas,jdbcType=VARCHAR},
+      </if>
+      <if test="prodebriefing != null" >
+        #{prodebriefing,jdbcType=VARCHAR},
+      </if>
+      <if test="keytips != null" >
+        #{keytips,jdbcType=VARCHAR},
+      </if>
+      <if test="transfertrip != null" >
+        #{transfertrip,jdbcType=VARCHAR},
+      </if>
+      <if test="rolloutdate != null" >
+        #{rolloutdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pritransfer != null" >
+        #{pritransfer,jdbcType=DECIMAL},
+      </if>
+      <if test="outinterest != null" >
+        #{outinterest,jdbcType=DECIMAL},
+      </if>
+      <if test="aging != null" >
+        #{aging,jdbcType=VARCHAR},
+      </if>
+      <if test="collectiondate != null" >
+        #{collectiondate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionmethod != null" >
+        #{collectionmethod,jdbcType=VARCHAR},
+      </if>
+      <if test="datereceivable != null" >
+        #{datereceivable,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firmsid != null" >
+        #{firmsid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bayside.npa.projectform.model.Projectform" >
+    update npa_projectform
+    <set >
+      <if test="projectname != null" >
+        projectname = #{projectname,jdbcType=VARCHAR},
+      </if>
+      <if test="projectmanager != null" >
+        projectmanager = #{projectmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="filenumber != null" >
+        filenumber = #{filenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="projectgrade != null" >
+        projectgrade = #{projectgrade,jdbcType=VARCHAR},
+      </if>
+      <if test="borrower != null" >
+        borrower = #{borrower,jdbcType=VARCHAR},
+      </if>
+      <if test="cityoforigin != null" >
+        cityoforigin = #{cityoforigin,jdbcType=VARCHAR},
+      </if>
+      <if test="subocounty != null" >
+        subocounty = #{subocounty,jdbcType=VARCHAR},
+      </if>
+      <if test="borbalance != null" >
+        borbalance = #{borbalance,jdbcType=DECIMAL},
+      </if>
+      <if test="borrowingdate != null" >
+        borrowingdate = #{borrowingdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="connumber != null" >
+        connumber = #{connumber,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteemode != null" >
+        guaranteemode = #{guaranteemode,jdbcType=VARCHAR},
+      </if>
+      <if test="bail != null" >
+        bail = #{bail,jdbcType=VARCHAR},
+      </if>
+      <if test="amountguaranteed != null" >
+        amountguaranteed = #{amountguaranteed,jdbcType=DECIMAL},
+      </if>
+      <if test="litsituation != null" >
+        litsituation = #{litsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="courtname != null" >
+        courtname = #{courtname,jdbcType=VARCHAR},
+      </if>
+      <if test="caseno != null" >
+        caseno = #{caseno,jdbcType=VARCHAR},
+      </if>
+      <if test="judge != null" >
+        judge = #{judge,jdbcType=VARCHAR},
+      </if>
+      <if test="borsituation != null" >
+        borsituation = #{borsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="guastatus != null" >
+        guastatus = #{guastatus,jdbcType=VARCHAR},
+      </if>
+      <if test="morsituation != null" >
+        morsituation = #{morsituation,jdbcType=VARCHAR},
+      </if>
+      <if test="invandclues != null" >
+        invandclues = #{invandclues,jdbcType=VARCHAR},
+      </if>
+      <if test="treideas != null" >
+        treideas = #{treideas,jdbcType=VARCHAR},
+      </if>
+      <if test="prodebriefing != null" >
+        prodebriefing = #{prodebriefing,jdbcType=VARCHAR},
+      </if>
+      <if test="keytips != null" >
+        keytips = #{keytips,jdbcType=VARCHAR},
+      </if>
+      <if test="transfertrip != null" >
+        transfertrip = #{transfertrip,jdbcType=VARCHAR},
+      </if>
+      <if test="rolloutdate != null" >
+        rolloutdate = #{rolloutdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pritransfer != null" >
+        pritransfer = #{pritransfer,jdbcType=DECIMAL},
+      </if>
+      <if test="outinterest != null" >
+        outinterest = #{outinterest,jdbcType=DECIMAL},
+      </if>
+      <if test="aging != null" >
+        aging = #{aging,jdbcType=VARCHAR},
+      </if>
+      <if test="collectiondate != null" >
+        collectiondate = #{collectiondate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectionmethod != null" >
+        collectionmethod = #{collectionmethod,jdbcType=VARCHAR},
+      </if>
+      <if test="datereceivable != null" >
+        datereceivable = #{datereceivable,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firmsid != null" >
+        firmsid = #{firmsid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bayside.npa.projectform.model.Projectform" >
+    update npa_projectform
+    set projectname = #{projectname,jdbcType=VARCHAR},
+      projectmanager = #{projectmanager,jdbcType=VARCHAR},
+      filenumber = #{filenumber,jdbcType=VARCHAR},
+      projectgrade = #{projectgrade,jdbcType=VARCHAR},
+      borrower = #{borrower,jdbcType=VARCHAR},
+      cityoforigin = #{cityoforigin,jdbcType=VARCHAR},
+      subocounty = #{subocounty,jdbcType=VARCHAR},
+      borbalance = #{borbalance,jdbcType=DECIMAL},
+      borrowingdate = #{borrowingdate,jdbcType=TIMESTAMP},
+      connumber = #{connumber,jdbcType=VARCHAR},
+      guaranteemode = #{guaranteemode,jdbcType=VARCHAR},
+      bail = #{bail,jdbcType=VARCHAR},
+      amountguaranteed = #{amountguaranteed,jdbcType=DECIMAL},
+      litsituation = #{litsituation,jdbcType=VARCHAR},
+      courtname = #{courtname,jdbcType=VARCHAR},
+      caseno = #{caseno,jdbcType=VARCHAR},
+      judge = #{judge,jdbcType=VARCHAR},
+      borsituation = #{borsituation,jdbcType=VARCHAR},
+      guastatus = #{guastatus,jdbcType=VARCHAR},
+      morsituation = #{morsituation,jdbcType=VARCHAR},
+      invandclues = #{invandclues,jdbcType=VARCHAR},
+      treideas = #{treideas,jdbcType=VARCHAR},
+      prodebriefing = #{prodebriefing,jdbcType=VARCHAR},
+      keytips = #{keytips,jdbcType=VARCHAR},
+      transfertrip = #{transfertrip,jdbcType=VARCHAR},
+      rolloutdate = #{rolloutdate,jdbcType=TIMESTAMP},
+      pritransfer = #{pritransfer,jdbcType=DECIMAL},
+      outinterest = #{outinterest,jdbcType=DECIMAL},
+      aging = #{aging,jdbcType=VARCHAR},
+      collectiondate = #{collectiondate,jdbcType=TIMESTAMP},
+      collectionmethod = #{collectionmethod,jdbcType=VARCHAR},
+      datereceivable = #{datereceivable,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
